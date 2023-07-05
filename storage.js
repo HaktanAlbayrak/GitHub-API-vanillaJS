@@ -1,36 +1,31 @@
-class Storage{
-    
-    static getSearchedUsersFromStorage(){
-        //Tüm kullanıcıları alma
+class Storage {
+  static getSearchedUsersFromStorage() {
+    // Get all users
+    let users;
 
-        let users;
-
-
-        if (localStorage.getItem("searched") === null) {
-            users = [];
-        }
-        else{
-            users = JSON.parse(localStorage.getItem("searched")); 
-        }
-
-        return users;
+    if (localStorage.getItem('searched') === null) {
+      users = [];
+    } else {
+      users = JSON.parse(localStorage.getItem('searched'));
     }
-    static addSearchedUserToStorage(username){
-        // Kullanıcı ekle
 
-        let users = this.getSearchedUsersFromStorage();
+    return users;
+  }
 
-            
-            if (users.indexOf(username) === -1) {
-                if(username)  users.push(username);
-            }
-            localStorage.setItem("searched",JSON.stringify(users));
+  static addSearchedUserToStorage(username) {
+    // User Add
+    let users = this.getSearchedUsersFromStorage();
 
-
+    // IndexOf
+    if (users.indexOf(username) === -1) {
+      users.push(username);
     }
-    static clearAllSearchedUsersFromStorage(){
-        // Tüm kullanıcıları sil
 
-        localStorage.removeItem("searched");
-    }
+    localStorage.setItem('searched', JSON.stringify(users));
+  }
+
+  static clearAllSearchedUsersFromStorage() {
+    // Clear All Searched Users From Storage
+    localStorage.removeItem('searched');
+  }
 }

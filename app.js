@@ -1,60 +1,60 @@
-// Elementleri seçme
-const githubForm = document.getElementById("github-form");
-const nameInput = document.getElementById("githubname");
-const clearLastUsers = document.getElementById("clear-last-users");
-const lastUsers = document.getElementById("last-users");
+// element selectors
+
+const githubForm = document.getElementById('github-form');
+const nameInput = document.getElementById('githubname');
+const clearLastUsers = document.getElementById('clear-last-users');
+const lastUsers = document.getElementById('last-users');
+
 const github = new Github();
 const ui = new UI();
 
-eventListeners();
+addEventListener();
 
-function eventListeners() {
-    githubForm.addEventListener("submit",getData);
-    clearLastUsers.addEventListener("click",clearAllSearched);
-    document.addEventListener("DOMContentLoaded",getAllSearched);
+function addEventListener() {
+  githubForm.addEventListener('submit', getData);
+  clearLastUsers.addEventListener('click', clearAllSearched);
+  document.addEventListener('DOMContentLoaded', getAllSearched);
 }
 
-function getData(e) {
-    
-    let username = nameInput.value.trim();
-    if (username === "") {
-        alert("Lütfen geçerli bir kullanıcı adı girin.");
-    }
-    else{
-        github.getGithubData(username)
-        .then(response =>{
-            if (response.user.message === "Not Found") {
-                ui.showError("Kullanıcı bulunamadı!");
-            }
-            else{                   
-                ui.addSearchedUserToUI(username);
-                Storage.addSearchedUserToStorage(username);
-                ui.showUserInfo(response.user);
-                ui.showRepoInfo(response.repo);
-            }
-        })
-        .catch(err => ui.showError(err));
-    }
+function getData(event) {
+  event.preventDefault();
 
-    ui.clearInput();
-    e.preventDefault();
+  let userName = nameInput.value.trim();
 
+  if (userName === '') {
+    ui.showError('Please enter a valid username.');
+  } else {
+    github
+      .getGithubData(userName)
+      .then((response) => {
+        if (response.user.message === 'Not Found') {
+          ui.showError('User not found.');
+        } else {
+          ui.addSearchedUserToUI(userName);
+          Storage.addSearchedUserToStorage(userName);
+          ui.showUserInfo(response.user);
+          ui.showRepoInfo(response.repo);
+        }
+      })
+      .catch((err) => ui.showError(err));
+  }
+
+  ui.clearInput();
 }
 
 function clearAllSearched() {
-    // Tüm arananları temizle
-    if (confirm("Emin misiniz?")) {
-        // Silme işlemleri
-        Storage.clearAllSearchedUsersFromStorage();// Storagedan temizleme
-        ui.clearAllSearchedFromUI();
-    }
+  // Clear all searched
 }
-function getAllSearched() {
-    let users = Storage.getSearchedUsersFromStorage();
-    let result = "";
-    users&&users.forEach(user => {
-        result += `<li class="list-group-item">${user}</li>`;
-    });
 
-    lastUsers.innerHTML = result;
+function getAllSearched() {
+  // Get searched from Storage and add to UI
+
+  let users = Storage.getSearchedUsersFromStorage();
+
+  let result = '';
+  users.map((user) => {
+    result += `<li class="list-group-item">${user}</li>`;
+  });
+
+  lastUsers.innerHTML = result;
 }
