@@ -44,6 +44,11 @@ function getData(event) {
 
 function clearAllSearched() {
   // Clear all searched
+
+  if (confirm('Are you sure?')) {
+    Storage.clearAllSearchedUsersFromStorage(); // clear from storage
+    ui.clearAllSearchedFromUI(); // clear from UI
+  }
 }
 
 function getAllSearched() {
